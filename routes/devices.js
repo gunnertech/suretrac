@@ -1,4 +1,4 @@
-var Mongoose = require('Mongoose');
+var Mongoose = require('mongoose');
 var Express = require('express');
 var NMEA = require('nmea-0183'); 
 var Router = Express.Router(); 
