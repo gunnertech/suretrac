@@ -76,6 +76,8 @@ Router.put('/:id', (req, res) => {
     device.lattitude = gprmcObject.lattitude;
     device.longitude = gprmcObject.longitude;
     device.save();
+
+    res.send();
   });
 });
 
