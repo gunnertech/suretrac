@@ -1,5 +1,9 @@
 extends layout
-
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 Map of all available trucks
+  #map
+
+  - var mapsUrl = "https://maps.googleapis.com/maps/api/js?callback=initMap&key=" + process.env.GOOGLE_MAPS_CLIENT_API_KEY;
+  script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js")
+  script(src="/javascripts/map.js")
+  script(src=mapsUrl)
