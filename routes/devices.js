@@ -28,6 +28,11 @@ Router.get('/', (req, res) => {
   });
 });
 
+Router.post('/', (req, res) => {
+  (new Device).save();
+  res.send();
+});
+
 // PUT /devices/id
 Router.put('/:id', (req, res) => {
   var originalSentence = req.body["nmea-sentence"];
