@@ -15,7 +15,7 @@ function initMap() {
 function getMarkers() {
   $.get('/devices', {}, function(res, resStatus) {
     for (var i = 0, len = res.length; i < len; i++) {
-      var lat = res[i].lattitude;
+      var lat = res[i].latitude;
       var lon = res[i].longitude;
       var id = res[i]._id;
 

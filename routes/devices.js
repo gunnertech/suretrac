@@ -6,7 +6,7 @@ var Router = Express.Router();
 Mongoose.connect(process.env.MONGODB_URI);
 
 var DeviceSchema = Mongoose.Schema({
-  lattitude: String,
+  latitude: String,
   longitude: String
 });
 
@@ -73,7 +73,7 @@ Router.put('/:id', (req, res) => {
       return;
     }
 
-    device.lattitude = gprmcObject.lattitude;
+    device.latitude = gprmcObject.latitude;
     device.longitude = gprmcObject.longitude;
     device.save();
 
