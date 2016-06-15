@@ -64,6 +64,7 @@ Router.put('/:id', (req, res) => {
   }
 
   // Add try-catch
+  originalSentence = originalSentence.replace('\0', '');
   var gprmcObject = NMEA.parse(originalSentence);
 
   Device.findOne({ _id: req.params.id }, (err, device) => {
