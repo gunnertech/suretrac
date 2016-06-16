@@ -1,4 +1,4 @@
-var INTERVAL = 2000;
+var INTERVAL = 100;
 var markerStore = {};
 var map;
 
