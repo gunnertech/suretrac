@@ -3,21 +3,7 @@ var Express = require('express');
 var NMEA = require('nmea-0183'); 
 var Router = Express.Router(); 
 
-Mongoose.connect(process.env.MONGODB_URI);
-
-var DeviceSchema = Mongoose.Schema({
-  latitude: String,
-  longitude: String
-});
-
-var NotificationSchema = Mongoose.Schema({
-  endpoint: String,
-  distance: String,
-  distanceUnits: String
-});
-
-var Device = Mongoose.model('Device', DeviceSchema);
-var Notification = Mongoose.model('Notification', NotificationSchema);
+var Device = require('../models/Device.js');
 
 // TODO: API Key validation for each one?
 
