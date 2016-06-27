@@ -64,7 +64,7 @@ Router.put('/:id', (req, res) => {
     device.longitude = gprmcObject.longitude;
     device.save();
 
-    res.send();
+    res.send("Success");
   });
 });
 
