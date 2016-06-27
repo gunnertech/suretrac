@@ -1,7 +1,7 @@
 # WheresMyGuns - aka SureTrac an Open Source GPS tracker for your web app
 # Example Server
 
-Here at Gunner Technology we needed a GPS tracker that could HTTP POST NMEA sentences to our server and let us use the GPS data in our web applications.
+Here at Gunner Technology we needed a GPS tracker that could HTTP POST NMEA sentences to our server and let us use the GPS data in our web applications. Please note we only send the RMC NMEA sentences since we don't care about anything else besides coordinates, feel free to modify the code to handle anything else though, even make a pull request if you like!
 
 An Instructable for the Hardware setup: [Link] (http://www.instructables.com/editInstructable/edit/EM8T7HBIPQMB6O5)
 
