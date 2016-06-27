@@ -8,3 +8,25 @@ An Instructable for the Hardware setup: [Link] (http://www.instructables.com/edi
 This example server collects data from all GPS trackers and displays their coordinates on a map in real-time.
 
 ## How to setup and run the server
+
+1. Clone the Repo
+
+  ```bash
+  git clone https://github.com/gunnertech/WheresMyGuns.git
+  ```
+2. Install Dependencies
+
+  ```bash
+  npm install
+  ```
+3. Create a .env file
+
+  ```env
+  GOOGLE_MAPS_CLIENT_API_KEY=YOUR_GOOGLE_MAPS_CLIENT_KEY_HERE
+  MONGODB_URI=mongodb://localhost/wheresmyguns
+  ```
+4. Start the server!
+
+  ```bash
+  npm start
+  ```
