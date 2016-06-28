@@ -5,7 +5,7 @@ Here at Gunner Technology we needed a GPS tracker that could HTTP POST NMEA sent
 
 An Instructable for the Hardware setup: [Link] (http://www.instructables.com/id/SureTrac-Open-Source-Software-Integrated-GPS/)
 
-The Repo for the Hardware Code: [Link] (https://github.com/gunnertech/WheresMyGuns_Hardware)
+The Repo for the Hardware Code: [Link] (https://github.com/gunnertech/SureTrac_Hardware)
 
 ## What this does
 This example server collects data from all GPS trackers and displays their coordinates on a map in real-time.
@@ -15,7 +15,7 @@ This example server collects data from all GPS trackers and displays their coord
 1. Clone the Repo
 
   ```bash
-  git clone https://github.com/gunnertech/WheresMyGuns.git
+  git clone https://github.com/gunnertech/SureTrac_Example_Server.git
   ```
 2. Install Dependencies
 
@@ -26,7 +26,7 @@ This example server collects data from all GPS trackers and displays their coord
 
   ```env
   GOOGLE_MAPS_CLIENT_API_KEY=YOUR_GOOGLE_MAPS_CLIENT_KEY_HERE
-  MONGODB_URI=mongodb://localhost/wheresmyguns
+  MONGODB_URI=mongodb://localhost/suretrac
   ```
 4. Start the server!
 
