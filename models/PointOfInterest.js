@@ -3,11 +3,17 @@ var Promise = require('bluebird');
 var _ = require('lodash');
 var Client = require('node-rest-client').Client;
 var client = new Client();
+var geocoder = require("geocoder");
+
+
 
 var PointOfInterestSchema = mongoose.Schema({
   endpoint: String,
   distance: String,
-  distanceUnits: String,
+  distanceUnits: {
+  	type: String,
+  	enum: ['miles','time']
+  },
   uuid: {
 		type: String,
 		required: true,
@@ -19,6 +25,24 @@ var PointOfInterestSchema = mongoose.Schema({
   locationData: String
 },{
 	timestamps: true
+});
+
+PointOfInterestSchema.pre('save', function (cb) {
+	var values = this;
+	if(!values.locationData || (values.latitude && values.longitude)) {
+		cb();
+	} else {
+		new Promise(function(resolve, reject) {
+			geocoder.geocode(values.locationData, function(err, data) {
+				resolve(data);
+			})
+		})
+		.then(function(data) {
+			values.longitude = data.results[0].geometry.location.lng;
+			values.latitude = data.results[0].geometry.location.lat;
+			cb();
+		});
+	}
 });
 
 PointOfInterestSchema.methods.sendNotificationFor = function(device) {

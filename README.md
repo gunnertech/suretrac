@@ -33,3 +33,45 @@ This example server collects data from all GPS trackers and displays their coord
   ```bash
   npm start
   ```
+
+## API Examples
+
+When using examples, make sure to replace localhost with the appropriate server.
+
+### List all registered devices
+```
+curl -H 'Content-Type: application/json' http://localhost:3000/devices
+```
+
+### Register a new device
+```
+curl -H 'Content-Type: application/json' -X POST http://localhost:3000/devices
+```
+
+This will return a device id, which you use when sending location data for a device (next example)
+
+### Update a device's poisiton
+```
+curl -H 'Content-Type: application/json' -X PUT -d '{"nmea-sentence": "$GPRMC,123519,A,4807.038,N,01131.000,E,022.4,084.4,230394,003.1,W*6A"}' http://localhost:3000/devices/<device id>
+```
+
+TODO: It would be nice if we could sent a nmea sentence or points directly
+
+### Register a new point of interest
+
+```
+curl -H 'Content-Type: application/json' -X POST -d '{"endpoint":"http://myserver.com/pois/notify", "distance": "5", "distanceUnits": "miles", "uuid": "cody-test-app-washington-monument", "locationData": "153 NE Sagamore Terr Port Saint Lucie, FL, 34983", "longitude": "", "latitude":""}' http://localhost:3000/pois
+```
+These parameters require a bit of explination
+
+* endpoint: This is the url that the application will POST to whenever a *device* gets within *distance* of the *point of interest*
+
+* distance: The threshold for which the endpoint should be alerted
+
+* distanceUnits: Either "miles" or "time"
+
+* uuid: A string you can use to name the poi. Note that this MUST be unique, so don't use "Washington Monument" use "Qualis: Washington Monument" to distinguish potential name collisions
+
+* locationData: In lieu of actual lat/long points, you may pass an address or city/state and the app will geocode this data for you. If you pass longitude and latitude, you can skip this parameter.
+
+

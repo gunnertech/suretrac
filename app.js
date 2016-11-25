@@ -12,6 +12,7 @@ Mongoose.Promise = Promise;
 
 var routes = require('./routes/index');
 var devices = require('./routes/devices.js');
+var pois = require('./routes/pointOfInterests.js');
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/devices', devices);
+app.use('/pois', pois);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

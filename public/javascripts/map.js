@@ -9,11 +9,42 @@ function initMap() {
     zoom: 13
   });
 
-  getMarkers(true);
-  window.setInterval(getMarkers, INTERVAL);
+  getPoiMarkers();
+  getDeviceMarkers(true);
+  window.setInterval(getDeviceMarkers, INTERVAL);
 }
 
-function getMarkers(initial) {
+function getPoiMarkers() {
+  $.get('/pois', {}, function(res, resStatus) {
+    for (var i = 0, len = res.length; i < len; i++) {
+      var lat = res[i].latitude;
+      var lon = res[i].longitude;
+      var id = res[i]._id;
+
+      if (!(lat && lon && id)) {
+        continue;
+      }
+
+      var latLng = new google.maps.LatLng(lat, lon);
+      if(markerStore.hasOwnProperty(id)) {
+        markerStore[id].setPosition(latLng);
+      } else {
+        var marker = new google.maps.Marker({
+          position: latLng,
+          title: res[i].uuid,
+          map: map
+        });
+        marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+        marker.setMap(map);
+
+        markerStore[id] = marker;
+      }
+    }
+  }, "json");
+}
+
+
+function getDeviceMarkers(initial) {
   var bounds = new google.maps.LatLngBounds();
 
   $.get('/devices', {}, function(res, resStatus) {
