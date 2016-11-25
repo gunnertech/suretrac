@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Location = require('./Location.js');
+var PointOfInterest = require('./PointOfInterest.js');
 var Promise = require('bluebird');
 var _ = require('lodash');
 
@@ -14,14 +15,16 @@ DeviceSchema.methods.withinSpecifiedDistanceOf = function(poi) {
 }
 
 DeviceSchema.post('save', function (device) {
-	Location.create({
-		latitude: device.latitude,
-		longitude: device.longitude,
-		device: device._id
-	})
-	.then(function(location) {
-		console.log(location);
-	})
+	if(device.latitude && device.longitude) {
+		Location.create({
+			latitude: device.latitude,
+			longitude: device.longitude,
+			device: device._id
+		})
+		.then(function(location) {
+			console.log(location);
+		})
+	}
 });
 
 DeviceSchema.post('save', function (device) {

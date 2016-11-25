@@ -9,10 +9,13 @@ function initMap() {
     zoom: 13
   });
 
-  getMarkers();
+  getMarkers(true);
+  window.setInterval(getMarkers, INTERVAL);
 }
 
-function getMarkers() {
+function getMarkers(initial) {
+  var bounds = new google.maps.LatLngBounds();
+
   $.get('/devices', {}, function(res, resStatus) {
     for (var i = 0, len = res.length; i < len; i++) {
       var lat = res[i].latitude;
@@ -23,19 +26,28 @@ function getMarkers() {
         continue;
       }
 
+      var latLng = new google.maps.LatLng(lat, lon);
       if(markerStore.hasOwnProperty(id)) {
-        markerStore[id].setPosition(new google.maps.LatLng(lat, lon));
+        markerStore[id].setPosition(latLng);
       } else {
         var marker = new google.maps.Marker({
-          position: new google.maps.LatLng(lat, lon),
+          position: latLng,
           title: "A Vendor's Truck",
           map: map
-        }); 
+        });
+        marker.setMap(map);
+
+        if(initial) {
+          bounds.extend(marker.getPosition())
+        }
 
         markerStore[id] = marker;
       }
-    }
 
-    window.setTimeout(getMarkers, INTERVAL);
+      // map.setCenter(latLng);
+    }
+    if(initial) {
+      map.fitBounds(bounds);
+    }
   }, "json");
 }

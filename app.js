@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var Mongoose = require('mongoose');
+var Device = require('./models/Device.js');
 var Promise = require('bluebird');
 
 Mongoose.Promise = Promise;
