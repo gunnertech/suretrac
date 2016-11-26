@@ -10,13 +10,13 @@ var LocationSchema = mongoose.Schema({
 });
 
 LocationSchema.pre('save', function (next) {
-	require('./Device.js').update( {_id: this.device}, { $addToSet: {parts: this._id } } )
+	require('./Device.js').update( {_id: this.device}, { $addToSet: {locations: this._id } } )
 	.then(( (devices) => next() ))
 	.error(( (err) => next(err) ));
 });
 
 LocationSchema.pre('remove', function (next) {
-	require('./Device.js').update( {_id: this.device}, { $pullAll: {parts: [this._id] } } )
+	require('./Device.js').update( {_id: this.device}, { $pullAll: {locations: [this._id] } } )
 	.then(( (devices) => next() ))
 	.error(( (err) => next(err) ));
 });

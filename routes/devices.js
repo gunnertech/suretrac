@@ -31,14 +31,13 @@ Router.get('/', (req, res) => {
 
 // GET /devices/:id
 Router.get('/:id', (req, res) => {
-  Device.findOne({ _id: req.params.id }, (err, device) => {
-    if (err) {
-      res.status(404).send();
-      return;
-    }
-
-    res.send(device);
-  });
+  Device.findById(req.params.id).populate('locations')
+  .then(function(device) {
+    res.json(device);
+  })
+  .error(function(err) {
+    res.status(404).send();
+  })
 });
 
 // PUT /devices/:id

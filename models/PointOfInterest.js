@@ -19,6 +19,8 @@ var PointOfInterestSchema = mongoose.Schema({
 		required: true,
 		unique: true
 	},
+	name: String,
+	description: String,
   active: Boolean,
   latitude: String,
   longitude: String,

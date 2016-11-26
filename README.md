@@ -74,4 +74,8 @@ These parameters require a bit of explination
 
 * locationData: In lieu of actual lat/long points, you may pass an address or city/state and the app will geocode this data for you. If you pass longitude and latitude, you can skip this parameter.
 
+* name: Optional - a name like "Cody's House" used for descriptive purposes
+
+* description: Optional - a description which can include a link that provides more information about the location.
+
 
