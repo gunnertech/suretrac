@@ -8,6 +8,8 @@ var DeviceSchema = mongoose.Schema({
   latitude: String,
   longitude: String,
   locations: [{type: mongoose.Schema.Types.ObjectId, ref:'Location'}]
+}, {
+	timestamps: true
 });
 
 DeviceSchema.methods.withinSpecifiedDistanceOf = function(poi) {

@@ -91,7 +91,7 @@ function getDeviceMarkers(initial) {
         });
         marker.setMap(map);
 
-        var contentString = '<div id="content"><h3>Device id: ' + res[i]._id + '</h3><a href="?deviceId='+res[i]._id+'">View Location History</a></div>';
+        var contentString = '<div id="content"><h3>Device id: ' + res[i]._id + '</h3><p><em>Last Updated: '+res[i].updatedAt+' </em><p><a href="?deviceId='+res[i]._id+'">View Location History</a></p></div>';
 
 
         var infowindow = new google.maps.InfoWindow({
@@ -143,7 +143,7 @@ function getLocationMarkers(initial) {
         marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
         marker.setMap(map);
 
-        var contentString = '<div id="content"><h3>Device id: ' + res._id + '</h3></div>';
+        var contentString = '<div id="content"><h3>Device id: ' + res._id + '</h3><p><em>Created At: '+res.locations[i].createdAt+' </em><p></div>';
 
 
         var infowindow = new google.maps.InfoWindow({
