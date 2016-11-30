@@ -96,7 +96,7 @@ These parameters require a bit of explination
 
 In this section, we'll create an end-to-end example of how this will work.
 
-If you want to try this, make sure you update the device ids and also change the localhost server if you don't have a local machine up and running
+If you want to try this, make sure you update the device ids and also change the localhost server (to https://suretrac.herokuapp.com) if you don't have a local machine up and running
 
 ### Step 1: Register a new Place Of Interest
 
