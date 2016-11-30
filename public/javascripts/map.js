@@ -49,14 +49,14 @@ function getPoiMarkers() {
         marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
         marker.setMap(map);
 
-        var contentString = '<div id="content"><h3>UUID: ' + res[i].uuid + '</h3><h5>' + res[i].name + '</h5><p>' + res[i].description + '</p></div>';
-
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
+        marker.poi = res[i];
 
         marker.addListener('click', function() {
+          var contentString = '<div id="content"><h3>UUID: ' + this.poi.uuid + '</h3><h5>' + this.poi.name + '</h5><p>' + this.poi.description + '</p></div>';
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+
           infowindow.open(map, marker);
         });
 
@@ -91,14 +91,14 @@ function getDeviceMarkers(initial) {
         });
         marker.setMap(map);
 
-        var contentString = '<div id="content"><h3>Device id: ' + res[i]._id + '</h3><p><em>Last Updated: '+res[i].updatedAt+' </em><p><a href="?deviceId='+res[i]._id+'">View Location History</a></p></div>';
-
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
+        marker.device = res[i];
 
         marker.addListener('click', function() {
+          var contentString = '<div id="content"><h3>Device id: ' + this.device._id + '</h3><p><em>Last Updated '+moment(this.device.updatedAt).fromNow()+' </em><p><a href="?deviceId='+this.device._id+'">View Location History</a></p></div>';
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+
           infowindow.open(map, marker);
         });
 
@@ -119,9 +119,9 @@ function getDeviceMarkers(initial) {
 
 function getLocationMarkers(initial) {
   var bounds = new google.maps.LatLngBounds();
+  // var markers = [];
 
   $.get('/devices/'+deviceId, {}, function(res, resStatus) {
-    console.log(res);
     for (var i = 0, len = res.locations.length; i < len; i++) {
       var lat = res.locations[i].latitude;
       var lon = res.locations[i].longitude;
@@ -143,15 +143,29 @@ function getLocationMarkers(initial) {
         marker.setIcon('http://maps.google.com/mapfiles/ms/icons/yellow-dot.png');
         marker.setMap(map);
 
-        var contentString = '<div id="content"><h3>Device id: ' + res._id + '</h3><p><em>Created At: '+res.locations[i].createdAt+' </em><p></div>';
-
-
-        var infowindow = new google.maps.InfoWindow({
-          content: contentString
-        });
+        marker.res = res;
+        marker.location = res.locations[i];
 
         marker.addListener('click', function() {
-          infowindow.open(map, marker);
+          var res = this.res;
+          var location = this.location;
+          var contentString = '<div id="content"><h3>Device id: ' + res._id + '</h3><p>Created '+moment(location.createdAt).fromNow()+'<p>';
+
+          if(location.distances && location.distances.length) {
+            contentString += '<h5>Distances from POIs</h5><ul>';
+            $.each(location.distances, function(i, distance) {
+              contentString += '<li>'+distance.pointOfInterest.name+': '+distance.distance.text+' ('+distance.duration.text+')</li>';
+            })
+            contentString += '</ul>';
+          }
+
+          contentString += '</div>';
+          
+          var infowindow = new google.maps.InfoWindow({
+            content: contentString
+          });
+
+          infowindow.open(map, this);
         });
 
         if(initial) {

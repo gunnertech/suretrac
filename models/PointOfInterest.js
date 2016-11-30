@@ -9,10 +9,10 @@ var geocoder = require("geocoder");
 
 var PointOfInterestSchema = mongoose.Schema({
   endpoint: String,
-  distance: String,
+  distance: Number,
   distanceUnits: {
   	type: String,
-  	enum: ['miles','time']
+  	enum: ['miles','minutes']
   },
   uuid: {
 		type: String,
@@ -21,7 +21,10 @@ var PointOfInterestSchema = mongoose.Schema({
 	},
 	name: String,
 	description: String,
-  active: Boolean,
+  active: {
+  	type: Boolean,
+  	default: true
+  },
   latitude: String,
   longitude: String,
   locationData: String
@@ -50,11 +53,14 @@ PointOfInterestSchema.pre('save', function (cb) {
 PointOfInterestSchema.methods.sendNotificationFor = function(device) {
 	var self = this;
 	return new Promise(function(resolve, reject) {
+		console.log("Sending notification to: " + self.endpoint)
 		client.post(self.endpoint, {
 			data: device,
 		  headers: { "Content-Type": "application/json", "Accepts":  "application/json" }
 		}, function(data, response) {
 		  resolve(data);
+		}).on('error', function (err) {
+    	reject(err);
 		});
 	})
 	.then(function(data) {
@@ -64,7 +70,14 @@ PointOfInterestSchema.methods.sendNotificationFor = function(device) {
 		}
 
 		return self;
-	});
+	})
+	.catch(function(err) {
+		console.log(err)
+	})
+	.error(function(err) {
+		console.log(err)
+	})
+	;
 }
 
 module.exports = mongoose.model('PointOfInterest', PointOfInterestSchema);

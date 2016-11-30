@@ -3,18 +3,36 @@ var Location = require('./Location.js');
 var PointOfInterest = require('./PointOfInterest.js');
 var Promise = require('bluebird');
 var _ = require('lodash');
+var nmea = require('nmea-0183'); 
 
 var DeviceSchema = mongoose.Schema({
   latitude: String,
   longitude: String,
+  nmeaSentence: String,
   locations: [{type: mongoose.Schema.Types.ObjectId, ref:'Location'}]
 }, {
 	timestamps: true
 });
 
-DeviceSchema.methods.withinSpecifiedDistanceOf = function(poi) {
-	return Promise.resolve(true); //TODO: actually check to see if the device is within 'distance' of poi
-}
+DeviceSchema.pre('save', function (next) {
+	var self = this;
+	if(self.nmeaSentence) {
+		var gprmcObject = null;
+		try {
+			self.nmeaSentence = self.nmeaSentence.replace('\0', '');
+			gprmcObject = nmea.parse(self.nmeaSentence);
+		} catch (e) {
+			console.log(e);
+		}
+
+		if(gprmcObject) {
+			self.latitude = gprmcObject.latitude;
+			self.longitude = gprmcObject.longitude;
+			self.nmeaSentence = null;
+		}
+	}
+	next();
+});
 
 DeviceSchema.post('save', function (device) {
 	if(device.latitude && device.longitude) {
@@ -27,25 +45,6 @@ DeviceSchema.post('save', function (device) {
 			console.log(location);
 		})
 	}
-});
-
-DeviceSchema.post('save', function (device) {
-	PointOfInterest.find({active: true})
-	.then(function(pois) {
-		return Promise.all(_.map(pois, function(poi) {
-			return device.withinSpecifiedDistanceOf(poi)
-			.then(function(verdict) {
-				return verdict ? poi : null;
-			});
-		}));
-	})
-	.then(function(pois) {
-		pois = _.compact(_.flatten(pois));
-
-		return Promise.all(_.map(pois, function(poi) {
-			return pois.sendNotificationFor(device);
-		}));
-	});
 });
 
 module.exports = mongoose.model('Device', DeviceSchema);

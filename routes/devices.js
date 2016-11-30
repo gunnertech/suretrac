@@ -2,6 +2,8 @@ var Mongoose = require('mongoose');
 var Express = require('express');
 var NMEA = require('nmea-0183'); 
 var Router = Express.Router(); 
+var Promise = require('bluebird');
+var _ = require('lodash');
 
 var Device = require('../models/Device.js');
 
@@ -17,21 +19,28 @@ Router.get('/', (req, res) => {
 // POST /devices
 Router.post('/', (req, res) => {
   var device = new Device;
-  device.save();
-
-  res.send(device._id);
+  device.save()
+  .then(function() {
+    res.json(device._id);
+  })
 });
 
 // GET /devices
 Router.get('/', (req, res) => {
-  Device.find({}, function(err, devices) {
-    res.send(devices);  
+  Device.find({})
+  .then(function(devices) {
+    res.json(devices);  
   });
 });
 
 // GET /devices/:id
 Router.get('/:id', (req, res) => {
-  Device.findById(req.params.id).populate('locations')
+  Device.findById(req.params.id).populate({
+    path: 'locations',
+    populate: {
+      path: 'distances'
+    }
+  })
   .then(function(device) {
     res.json(device);
   })
@@ -42,33 +51,19 @@ Router.get('/:id', (req, res) => {
 
 // PUT /devices/:id
 Router.put('/:id', (req, res) => {
-  var originalSentence = req.body["nmea-sentence"];
-
-  if (!originalSentence) {
-    res.status(400).send("Must have a NMEA sentence in the {'nmea-sentence'} field");
-    return;
+  //fix old implementation
+  if(req.body["nmea-sentence"]) {
+    req.body.nmeaSentence = req.body["nmea-sentence"];
+    delete req.body["nmea-sentence"];
   }
 
-  // Add try-catch
-  try {
-    originalSentence = originalSentence.replace('\0', '');
-    var gprmcObject = NMEA.parse(originalSentence);
-  } catch (e) {
-    res.status(500).send("Error parsing the NMEA sentence");
-    return;
-  }
-
-  Device.findOne({ _id: req.params.id }, (err, device) => {
-    if (err) {
-      res.status(404).send("Device ID does not exist");
-      return;
-    }
-
-    device.latitude = gprmcObject.latitude;
-    device.longitude = gprmcObject.longitude;
-    device.save();
-
-    res.send("Success");
+  Device.findOne({ _id: req.params.id })
+  .then(function(device) {
+    _.extend(device, req.body);  
+    return device.save().then(function(){ return device; });
+  })
+  .then(function(device) {
+    res.status(200).json({});
   });
 });
 

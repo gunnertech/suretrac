@@ -8,6 +8,8 @@ block content
     #map
 
   - var mapsUrl = "https://maps.googleapis.com/maps/api/js?callback=initMap&key=" + process.env.GOOGLE_MAPS_CLIENT_API_KEY;
+
   script(src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment.min.js")
   script(src="/javascripts/map.js")
   script(src=mapsUrl)
